@@ -90,9 +90,9 @@ F_tilda = F - G * Knp;
 
 %% Robust constraints
 % -1 <= x2 <= 1
-Ak = [0 1 0; 0 -1 0];
-Bk = zeros(2,2);
-ck = [-1; -1];
+Ak = [1 0 0; -1 0 0; 0 1 0; 0 -1 0; 0 0 1; 0 0 -1];
+Bk = zeros(6,2);
+ck = - ones(6,1);
 
 rho = @(i)(norm((E1 - E2 * K) * F_tilda^i * H, p_norm));
 
@@ -144,7 +144,9 @@ controller = optimizer(constraints,objective,ops,x(:,1),v(:,1));
 %% Simple test
 N = 20;
 X = NaN * ones(N+1, size(F,2));
-Delta = 0 * rand(N, size(H,2), size(H,2));
+if ~exist('Delta')
+    Delta = 2 * rand(N, size(H,2), size(H,2)) - 1;
+end
 U = NaN * ones(N, size(G,2));
 V = NaN * ones(N, size(G,2));
 
