@@ -5,8 +5,9 @@ This repository contains complimentary material to the paper "A Guaranteed Cost 
 It contains:
 - The paper itself (to be added);
 - The source code for the numerical examples;
-- An annex with proof of Lemma 3 (to be added);
-- An annex with the discussion on the independence of controllers in Corollary 1 (to be added).
+- Complimentary material with: 
+  - Proof of Lemma 3 (to be added);
+  - Discussion on the independence of controllers in Corollary 1.
 
 ## Pre-requisites
 
