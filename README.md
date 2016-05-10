@@ -6,7 +6,7 @@ It contains:
 - The paper itself (to be added);
 - The source code for the numerical examples;
 - Complimentary material with: 
-  - Proof of Lemma 3 (to be added);
+  - Proof of Lemma 3;
   - Discussion on the independence of controllers in Corollary 1.
 
 ## Pre-requisites
