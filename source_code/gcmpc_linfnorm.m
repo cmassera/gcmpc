@@ -76,7 +76,7 @@ u = - K * x(:, 1:T) + v;
 %% Objective Functional
 R_bar = R + G' * X * G + einv * (E2' * E2);
 
-objective = x(:,1)' * S * x(:,1);
+objective = 0;
 for i = 1:T
     objective = objective + v(:,i)' * R_bar * v(:,i);
 end
@@ -94,7 +94,7 @@ Ak = [1 0 0; -1 0 0; 0 1 0; 0 -1 0; 0 0 1; 0 0 -1];
 Bk = zeros(6,2);
 ck = - ones(6,1);
 
-rho = @(i)(norm((E1 - E2 * K) * F_tilda^i * H, p_norm));
+rho = @(i)(norm((E1 - E2 * K) * F_tilda^i * H, pd_norm));
 
 c = eye(T,T);
 for k = 2:T

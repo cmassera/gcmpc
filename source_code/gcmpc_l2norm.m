@@ -94,7 +94,7 @@ Ak = [1 0 0; -1 0 0; 0 1 0; 0 -1 0; 0 0 1; 0 0 -1];
 Bk = zeros(6,2);
 ck = - ones(6,1);
 
-rho = @(i)(norm((E1 - E2 * K) * F_tilda^i * H, p_norm));
+rho = @(i)(norm((E1 - E2 * K) * F_tilda^i * H, pd_norm));
 
 c = eye(T,T);
 for k = 2:T
@@ -108,7 +108,7 @@ c(abs(c) < 1e-10) = 0;
 
 phi = sdpvar(1, T);
 for k = 1:T
-    phi(k) = norm((E1 - E2 * K) * x(:,k) + E2 * v(:,k), p_norm);
+    phi(k) = norm((E1 - E2 * K) * x(:,k) + E2 * v(:,k), pd_norm);
 end
 
 phi_bar = phi * c';
