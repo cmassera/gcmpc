@@ -35,4 +35,9 @@ All examples are self contained and can be directly run. For example:
 
 ## Citing
 
-This readme will be updated upon paper publication.
+@article{massera2016guaranteed,
+title={A Guaranteed Cost Approach to Robust Model Predictive Control of Uncertain Linear Systems},
+author={Massera, Carlos M and Terra, Marco H and Wolf, Denis F},
+journal={arXiv preprint arXiv:1606.03437},
+year={2016}
+}
