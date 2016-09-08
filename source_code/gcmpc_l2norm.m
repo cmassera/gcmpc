@@ -138,7 +138,7 @@ for k = 1:T
 end
 
 %% YALMIP Controller
-ops = sdpsettings('verbose',0);
+ops = sdpsettings('solver', 'mosek', 'verbose', 0);
 controller = optimizer(constraints,objective,ops,x(:,1),v(:,1));
 
 %% Simple test
@@ -149,6 +149,8 @@ if ~exist('Delta')
 end
 U = NaN * ones(N, size(G,2));
 V = NaN * ones(N, size(G,2));
+
+controller{zeros(size(F,2), 1)};
 
 X(1,:) = [1;1;1];
 
@@ -161,4 +163,15 @@ for i = 1:N
     delta = reshape(Delta(1, :, :), [size(H,2), size(H,2)]);
     X(i+1,:) = ((F + H * delta * E1) * X(i,:)' + ...
                 (G + H * delta * E2) * U(i,:)')';
+end
+
+%% Timing test
+M = 1000;
+
+gcmpc_time = zeros(M,1);
+
+for i = 1:M
+    tic
+    controller{0.5 * rand(size(F,2), 1)};
+    gcmpc_time(i) = toc;
 end
