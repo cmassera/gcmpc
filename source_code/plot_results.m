@@ -17,7 +17,7 @@ fig.PaperUnits = 'centimeters';
 fig.PaperPosition = [0 0 columnwidth 0.9 * columnwidth];
 fig.PaperSize = [columnwidth 0.9 * columnwidth];
 
-print -dpng -r300 gcc_cost.png
+print -dpng -r300 results/gcc_cost.png
 
 %%
 fig = figure(2);
@@ -33,7 +33,7 @@ fig.PaperUnits = 'centimeters';
 fig.PaperPosition = [0 0 textwidth / 3 textwidth / 3];
 fig.PaperSize = [textwidth / 3 textwidth / 3];
 
-print -dpng -r300 results_1.png
+print -dpng -r300 results/results_1.png
 
 %%
 fig = figure(3);
@@ -60,7 +60,7 @@ fig.PaperUnits = 'centimeters';
 fig.PaperPosition = [0 0 textwidth / 3 textwidth / 3];
 fig.PaperSize = [textwidth / 3 textwidth / 3];
 
-print -dpng -r300 results_2.png
+print -dpng -r300 results/results_2.png
 
 %%
 fig = figure(4);
@@ -82,7 +82,7 @@ fig.PaperUnits = 'centimeters';
 fig.PaperPosition = [0 0 textwidth / 3 textwidth / 3];
 fig.PaperSize = [textwidth / 3 textwidth / 3];
 
-print -dpng -r300 results_3.png
+print -dpng -r300 results/results_3.png
 
 %%
 fig = figure(5);
@@ -100,4 +100,4 @@ fig.PaperUnits = 'centimeters';
 fig.PaperPosition = [0 0 columnwidth 0.9 * columnwidth];
 fig.PaperSize = [columnwidth 0.9 * columnwidth];
 
-print -dpng -r300 time_comparison.png
+print -dpng -r300 results/time_comparison.png
