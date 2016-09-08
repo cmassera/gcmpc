@@ -18,11 +18,19 @@ The source code in this repository requires:
 and
 
 - [YALMIP Toolbox](http://users.isy.liu.se/johanl/yalmip/)
-- [Gurobi](http://www.gurobi.com)
+- [Mosek](https://www.mosek.com)
 
 Installed and referenced in MATLAB's path.
 
-Note: Gurobi has free-licenses for Academia.
+Note: Mosek has free-licenses for Academia.
+
+### Installing pre-requisites
+
+ 1. Create a folder named **tbxmanager**
+ 2. Go to this folder in Matlab
+ 3. Execute `urlwrite('http://www.tbxmanager.com/tbxmanager.m', 'tbxmanager.m');`
+ 4. Execute `tbxmanager install yalmip sedumi`
+ 5. Edit/create startup.m in your Matlab startup folder and add `tbxmanager restorepath` there
 
 ## Running the examples
 
@@ -30,6 +38,7 @@ All examples are self contained and can be directly run. For example:
 
 ```matlab
 >> gcmpc_l2norm
+>> rmpc_enum
 >> plot_results
 ```
 
