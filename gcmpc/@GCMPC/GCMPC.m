@@ -36,18 +36,22 @@ classdef GCMPC < handle
         % Linear GCC results
         gcc = struct('k', [], 'p', [], 'x', [], 'r_bar', []);
         
+        % Nil potent controller results
+        np = struct('k', [], 'a_cl', []);
+        
         % Boolean flags to check if all requirements have been met
         is_system_set      = false;
         is_disturbance_set = false;
         is_cost_set        = false;
         is_constraint_set  = false;
         is_gcc_set         = false;
+        is_nilpotent_set   = false;
         
         % Constants
         kPosDefTest = 1e-8;    % Minimum eigenvalue to consider matrix Positive-Definite
         kSymTest = 1e-8;       % Maximum difference to transpose for symmetric 
         kSdpSolver = 'mosek';  % Default SDP solver
-        kQpSolver = 'gurobi';  % Default (QC)QP solver
+        kQpSolver = 'mosek';   % Default (QC)QP solver
     end
     
     properties(SetAccess=public, GetAccess=public)

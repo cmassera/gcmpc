@@ -26,3 +26,6 @@ gcmpc.set_cost(Q, R);
 
 %% Generate linear controller
 gcmpc.calculate_gcc()
+
+%% Generate nil-potent controller
+gcmpc.calculate_nilpotent()
