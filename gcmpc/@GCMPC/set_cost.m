@@ -11,7 +11,7 @@ function obj = set_cost(obj, q, r, n)
 %    (1) Carlos M. Massera
 
     if ~obj.is_system_set
-        error('System matrices not set, define them before the disturbances')
+        error('System matrices not set, define them before the cost')
     end
     
     if obj.is_cost_set
