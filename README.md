@@ -1,10 +1,10 @@
-# A Guaranteed Cost Approach to Robust Model Predictive Control of Uncertain Linear Systems
+# Guaranteed Cost Approach to Robust Model Predictive Control of Uncertain Linear Systems
 
-This repository contains complimentary material to the paper "A Guaranteed Cost Approach to Robust Model Predictive Control of Uncertain Linear Systems". 
+This repository implements the Guaranteed Cost Model Predictive Controller (GCMPC) and contains complementary material for the paper "A Guaranteed Cost Approach to Robust Model Predictive Control of Uncertain Linear Systems". 
 
 It contains:
-- The paper itself (to be added);
-- The source code for the numerical examples;
+- GCMPC Matlab implementation;
+- The source code for the numerical examples of the paper;
 - Complimentary material with: 
   - Proof of Lemma 3;
   - Discussion on the independence of controllers in Corollary 1.
@@ -32,7 +32,7 @@ Note: Mosek has free-licenses for Academia.
  4. Execute `tbxmanager install yalmip`
  5. Edit/create startup.m in your Matlab startup folder and add `tbxmanager restorepath` there
  6. Install Mosek through the steps in their website/installer
- 7. Add mosek to Matlab’s path
+ 7. Add mosek to Matlab's path
 
 ## Running the examples
 
