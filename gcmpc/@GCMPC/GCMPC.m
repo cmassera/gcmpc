@@ -22,16 +22,18 @@ classdef GCMPC < handle
         d_z = [];
         
         % Constraint matrices
-        %     H x_k <= e
-        h = [];
-        e = [];
+        %     Hx x_k + Hu u_k + g <= e
+        h_x = [];
+        h_u = [];
+        g = [];
         
         % System dimensions
-        n_x = 0;
-        n_u = 0;
-        n_w = 0;
-        n_y = 0;
-        n_z = 0;
+        n_x = 0;  % Number of states
+        n_u = 0;  % Number of control inputs
+        n_w = 0;  % Number of disturbance inputs
+        n_y = 0;  % Number of disturbance outputs
+        n_z = 0;  % Number of cost outputs (positive eigenvalues of [Q N; N' R])
+        n_c = 0;  % Number of constraints
         
         % Linear GCC results
         gcc = struct('k', [], 'p', [], 'x', [], 'r_bar', []);

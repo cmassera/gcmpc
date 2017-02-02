@@ -17,6 +17,7 @@ The source code in this repository requires:
 
 and
 
+- [MATLAB Symbolic Toolbox](https://www.mathworks.com/products/symbolic.html)
 - [YALMIP Toolbox](http://users.isy.liu.se/johanl/yalmip/)
 - [Mosek](https://www.mosek.com)
 

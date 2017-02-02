@@ -18,11 +18,17 @@ E2 = [0.4 -0.4];
 Q = eye(3);
 R = eye(2);
 
+%% Constraint definitions
+Ak = [1 0 0; -1 0 0; 0 1 0; 0 -1 0; 0 0 1; 0 0 -1];
+Bk = zeros(6,2);
+ck = - ones(6,1);
+
 %% Initialize class
 gcmpc = GCMPC;
 gcmpc.set_system(F, G);
 gcmpc.set_disturbance(H, E1, E2);
 gcmpc.set_cost(Q, R);
+gcmpc.set_constraint(Ak, Bk, ck);
 
 %% Generate linear controller
 gcmpc.calculate_gcc()
