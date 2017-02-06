@@ -22,19 +22,30 @@ classdef GCMPC < handle
         d_z = [];
         
         % Constraint matrices
-        %     H x_k <= e
-        h = [];
-        e = [];
+        %     Hx x_k + Hu u_k + g <= e
+        h_x = [];
+        h_u = [];
+        g = [];
         
         % System dimensions
-        n_x = 0;
-        n_u = 0;
-        n_w = 0;
-        n_y = 0;
-        n_z = 0;
+        n_x = 0;  % Number of states
+        n_u = 0;  % Number of control inputs
+        n_w = 0;  % Number of disturbance inputs
+        n_y = 0;  % Number of disturbance outputs
+        n_z = 0;  % Number of cost outputs (positive eigenvalues of [Q N; N' R])
+        n_c = 0;  % Number of constraints
+        n_t = 0;  % GCMPC horizon length
         
         % Linear GCC results
         gcc = struct('k', [], 'p', [], 'x', [], 'r_bar', []);
+        
+        % Nil potent controller results
+        np = struct('k', [], 'a_cl', []);
+        
+        % Optimization problem structure
+        opt = struct('objective', 0, 'constraint', [], ...
+                     'variable', struct('x', [], 'v', [], 'u', []), ...
+                     'controller', 0);
         
         % Boolean flags to check if all requirements have been met
         is_system_set      = false;
@@ -42,12 +53,14 @@ classdef GCMPC < handle
         is_cost_set        = false;
         is_constraint_set  = false;
         is_gcc_set         = false;
+        is_nilpotent_set   = false;
         
         % Constants
         kPosDefTest = 1e-8;    % Minimum eigenvalue to consider matrix Positive-Definite
         kSymTest = 1e-8;       % Maximum difference to transpose for symmetric 
+        kZeroTest = 1e-8;      % Maximum absolute value to be considered zero
         kSdpSolver = 'mosek';  % Default SDP solver
-        kQpSolver = 'gurobi';  % Default (QC)QP solver
+        kQpSolver = 'mosek';   % Default (QC)QP solver
     end
     
     properties(SetAccess=public, GetAccess=public)
