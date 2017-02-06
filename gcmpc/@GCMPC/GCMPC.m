@@ -34,12 +34,18 @@ classdef GCMPC < handle
         n_y = 0;  % Number of disturbance outputs
         n_z = 0;  % Number of cost outputs (positive eigenvalues of [Q N; N' R])
         n_c = 0;  % Number of constraints
+        n_t = 0;  % GCMPC horizon length
         
         % Linear GCC results
         gcc = struct('k', [], 'p', [], 'x', [], 'r_bar', []);
         
         % Nil potent controller results
         np = struct('k', [], 'a_cl', []);
+        
+        % Optimization problem structure
+        opt = struct('objective', 0, 'constraint', [], ...
+                     'variable', struct('x', [], 'v', [], 'u', []), ...
+                     'controller', 0);
         
         % Boolean flags to check if all requirements have been met
         is_system_set      = false;
@@ -52,6 +58,7 @@ classdef GCMPC < handle
         % Constants
         kPosDefTest = 1e-8;    % Minimum eigenvalue to consider matrix Positive-Definite
         kSymTest = 1e-8;       % Maximum difference to transpose for symmetric 
+        kZeroTest = 1e-8;      % Maximum absolute value to be considered zero
         kSdpSolver = 'mosek';  % Default SDP solver
         kQpSolver = 'mosek';   % Default (QC)QP solver
     end
