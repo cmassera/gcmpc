@@ -1,11 +1,12 @@
-function obj = set_constraint(obj, h_x, h_u, g)
+function obj = set_constraint(obj, h_x, h_u, g, c_type)
 %SET_CONSTRAINTS Set constraint matrices Hx, Hu and g
 %
 %    Input(s):
-%    (1) obj - GCMPC class instance
-%    (2) h_x - Constraint state matrix
-%    (3) h_y - Constraint control input matrix
-%    (4) g   - Constraint affine term
+%    (1) obj    - GCMPC class instance
+%    (2) h_x    - Constraint state matrix
+%    (3) h_y    - Constraint control input matrix
+%    (4) g      - Constraint affine term
+%    (5) c_type - Constraint type from ConstraintTypeEnum (optional)
 %
 %    Author(s):
 %    (1) Carlos M. Massera
@@ -19,6 +20,10 @@ function obj = set_constraint(obj, h_x, h_u, g)
     
     if obj.is_constraint_set
          warning('Constraint definition is replaced, make sure your code is correct')
+    end
+    
+    if nargin <= 4
+        c_type = ConstraintTypeEnum.standard;
     end
     
     % Get constraint size
@@ -43,6 +48,13 @@ function obj = set_constraint(obj, h_x, h_u, g)
     
     if size(g, 2) ~= 1
         error('g is not a vector');
+    end
+    
+    if (c_type == ConstraintTypeEnum.standard) || ...
+       (c_type == ConstraintTypeEnum.robust_invariant)
+        obj.constraint_type = c_type;
+    else
+        error('Invalid constraint type')
     end
     
     % Set instance variables

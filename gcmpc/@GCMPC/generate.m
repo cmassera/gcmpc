@@ -58,7 +58,15 @@ function controller = generate(obj, n_t)
     constraint = (x(:,2:end) == (obj.a - obj.b_u * obj.gcc.k) * x(:,1:end-1) + obj.b_u * v);
     
     % Generate robust constraint set
-    cap_phi = calculate_cap_phi(obj, x, v);
+    switch obj.constraint_type
+        case ConstraintTypeEnum.standard
+            cap_phi = calculate_cap_phi_standard(obj, x, v);
+        case ConstraintTypeEnum.robust_invariant
+            cap_phi = calculate_cap_phi_ris(obj, x, v);
+        otherwise
+            error('Unkown type of constraint')
+    end
+    cap_phi
     
     % Add robust inequalities to optimization
     h_tilda = obj.h_x - obj.h_u * obj.gcc.k;
@@ -86,8 +94,9 @@ function x = rho(obj, i)
     x = norm((obj.c_y - obj.d_y * obj.gcc.k) * (obj.np.a_cl ^ i) * obj.b_w, 2);
 end
 
-function cap_phi = calculate_cap_phi(obj, x, v)
-%CALCULATE_CAP_PHI helper function to calculate capital Phi based on Lemma 4 and Theorem 3
+function cap_phi = calculate_cap_phi_standard(obj, x, v)
+%CALCULATE_CAP_PHI_STANDARD helper function to calculate capital Phi based on 
+%                           Lemma 4 and Theorem 3, for standard constraint
     
     % First calculate the coeficient matrix c (Lemma 4)
     c = eye(obj.n_t);
@@ -131,5 +140,27 @@ function cap_phi = calculate_cap_phi(obj, x, v)
     cap_phi = sdpvar(obj.n_c, obj.n_t);
     for i = 1:obj.n_c
         cap_phi(i, :) = phi_bar * factor(:, :, i)';
+    end 
+end
+
+function cap_phi = calculate_cap_phi_ris(obj, x, v)
+%CALCULATE_CAP_PHI_STANDARD helper function to calculate capital Phi for robust invariant sets
+
+    % Maximum norm of w_k
+    w_k_max = sdpvar(1, obj.n_t, 'full');
+    for i = 1:obj.n_t
+        w_k_max(1, i) = norm((obj.c_y - obj.d_y * obj.gcc.k) * x(:, i) + obj.d_y * v(:,i), 2);
     end
+    
+    % Weights on each w_k for each constraint
+    h_tilda = obj.h_x - obj.h_u * obj.gcc.k;
+    
+    weight = zeros(obj.n_c, 1);
+    for i = 1:obj.n_c
+        weight(i, 1) = norm(h_tilda * obj.b_w, 2);
+    end
+    
+    % Calculate Phi
+    cap_phi = weight * w_k_max;
+    
 end

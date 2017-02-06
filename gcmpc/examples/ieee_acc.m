@@ -28,7 +28,7 @@ gcmpc = GCMPC;
 gcmpc.set_system(F, G);
 gcmpc.set_disturbance(H, E1, E2);
 gcmpc.set_cost(Q, R);
-gcmpc.set_constraint(Ak, Bk, ck);
+gcmpc.set_constraint(Ak, Bk, ck, ConstraintTypeEnum.standard);
 
 %% Generate linear controller
 T = 10;

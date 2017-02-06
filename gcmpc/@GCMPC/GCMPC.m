@@ -26,6 +26,7 @@ classdef GCMPC < handle
         h_x = [];
         h_u = [];
         g = [];
+        constraint_type = ConstraintTypeEnum.null;
         
         % System dimensions
         n_x = 0;  % Number of states
