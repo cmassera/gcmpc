@@ -41,7 +41,6 @@ if ~exist('Delta')
     Delta = 2 * rand(N, size(H,2), size(H,2)) - 1;
 end
 U = NaN * ones(N, size(G,2));
-V = NaN * ones(N, size(G,2));
 
 controller{zeros(size(F,2), 1)};
 
@@ -51,7 +50,6 @@ for i = 1:N
     tic
     U(i,:) = controller{X(i,:)'}';
     toc
-    V(i,:) = U(i,:) + X(i,:) * K';
     
     delta = reshape(Delta(1, :, :), [size(H,2), size(H,2)]);
     X(i+1,:) = ((F + H * delta * E1) * X(i,:)' + ...

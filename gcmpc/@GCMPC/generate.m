@@ -58,8 +58,37 @@ function controller = generate(obj, n_t)
     constraint = (x(:,2:end) == (obj.a - obj.b_u * obj.gcc.k) * x(:,1:end-1) + obj.b_u * v);
     
     % Generate robust constraint set
-    %     index names should match paper
+    cap_phi = calculate_cap_phi(obj, x, v);
+    
+    % Add robust inequalities to optimization
+    h_tilda = obj.h_x - obj.h_u * obj.gcc.k;
+    for k = 1:obj.n_t
+        constraint = [constraint;
+                      h_tilda * x(:,k) + obj.h_u * v(:,k) + obj.g + cap_phi(:,k) <= 0];
+    end
+    
+    % Create YALMIP object
+    ops = sdpsettings('solver', obj.options.solver_qp, 'verbose', 0);
+    controller = optimizer(constraint, objective, ops, x(:,1), u(:,1));
+    
+    % Save everything else
+    obj.opt.objective = objective;
+    obj.opt.constraint = constraint;
+    obj.opt.variable.x = x;
+    obj.opt.variable.u = u;
+    obj.opt.variable.v = v;
+    obj.opt.controller = controller;
+end
 
+function x = rho(obj, i)
+%RHO helper function to calculate terms of c matrix
+    
+    x = norm((obj.c_y - obj.d_y * obj.gcc.k) * (obj.np.a_cl ^ i) * obj.b_w, 2);
+end
+
+function cap_phi = calculate_cap_phi(obj, x, v)
+%CALCULATE_CAP_PHI helper function to calculate capital Phi based on Lemma 4 and Theorem 3
+    
     % First calculate the coeficient matrix c (Lemma 4)
     c = eye(obj.n_t);
     for k = 2:obj.n_t
@@ -103,27 +132,4 @@ function controller = generate(obj, n_t)
     for i = 1:obj.n_c
         cap_phi(i, :) = phi_bar * factor(:, :, i)';
     end
-    
-    % Add robust inequalities to optimization
-    for k = 1:obj.n_t
-    constraint = [constraint;
-        h_tilda * x(:,k) + obj.h_u * v(:,k) + obj.g + cap_phi(:,k) <= 0];
-    end
-    
-    % Create YALMIP object
-    ops = sdpsettings('solver', obj.options.solver_qp, 'verbose', 0);
-    controller = optimizer(constraint, objective, ops, x(:,1), u(:,1));
-    
-    % Save everything else
-    obj.opt.objective = objective;
-    obj.opt.constraint = constraint;
-    obj.opt.variable.x = x;
-    obj.opt.variable.u = u;
-    obj.opt.variable.v = v;
-    obj.opt.controller = controller;
-end
-
-function x = rho(obj, i)
-%RHO helper function to calculate terms of c matrix
-    x = norm((obj.c_y - obj.d_y * obj.gcc.k) * (obj.np.a_cl ^ i) * obj.b_w, 2);
 end
