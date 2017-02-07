@@ -1,4 +1,4 @@
-function obj = set_constraint(obj, h_x, h_u, g)
+function obj = set_constraint(obj, h_x, h_u, g, h_r)
 %SET_CONSTRAINTS Set constraint matrices Hx, Hu and g
 %
 %    Input(s):
@@ -6,6 +6,7 @@ function obj = set_constraint(obj, h_x, h_u, g)
 %    (2) h_x - Constraint state matrix
 %    (3) h_y - Constraint control input matrix
 %    (4) g   - Constraint affine term
+%    (5) h_r - Constraint reference input matrix (optional)
 %
 %    Author(s):
 %    (1) Carlos M. Massera
@@ -19,6 +20,11 @@ function obj = set_constraint(obj, h_x, h_u, g)
     
     if obj.is_constraint_set
          warning('Constraint definition is replaced, make sure your code is correct')
+    end
+    
+    if obj.is_reference_set && (nargin <= 4)
+        warning('This system as a reference but no constraint matrix was defined, assuming zero')
+        h_r = zeros(size(h_x, 1), obj.n_r);
     end
     
     % Get constraint size
@@ -35,6 +41,14 @@ function obj = set_constraint(obj, h_x, h_u, g)
     
     if size(h_u, 2) ~= obj.n_u
         error('Hu matrix size does not match Bu matrix');
+    end
+    
+    if obj.is_reference_set && (size(h_r, 1) ~= n_c)
+        error('Hr matrix size does not match Hx matrix');
+    end
+    
+    if obj.is_reference_set && (size(h_r, 2) ~= obj.n_r)
+        error('Hu matrix size does not match Br matrix');
     end
     
     if size(g, 1) ~= n_c

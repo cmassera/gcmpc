@@ -57,11 +57,11 @@ function obj = set_cost(obj, q, r, n)
 
     w_half = sqrt(s(mask, mask)) * vt(:, mask)';
 	c_z = w_half(:,1:obj.n_x);
-    d_z = w_half(:,obj.n_x+1:end);
+    d_z_u = w_half(:,obj.n_x+1:end);
     
     % Set instance variables
     obj.c_z = c_z;
-    obj.d_z = d_z;
+    obj.d_z_u = d_z_u;
     obj.n_z = size(c_z, 1);
     obj.is_cost_set = true;
 end

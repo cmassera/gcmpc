@@ -80,14 +80,8 @@ function controller = generate(obj, n_t)
     obj.opt.controller = controller;
 end
 
-function x = rho(obj, i)
-%RHO helper function to calculate terms of c matrix
-    
-    x = norm((obj.c_y - obj.d_y * obj.gcc.k) * (obj.np.a_cl ^ i) * obj.b_w, 2);
-end
-
 function cap_phi = calculate_cap_phi(obj, x, v)
-%CALCULATE_CAP_PHI helper function to calculate capital Phi based on Lemma 4 and Theorem 3
+%CALCULATE_CAP_PHI Helper function to calculate capital Phi based on Lemma 4 and Theorem 3
     
     % First calculate the coeficient matrix c (Lemma 4)
     c = eye(obj.n_t);
@@ -104,8 +98,8 @@ function cap_phi = calculate_cap_phi(obj, x, v)
     % Calculate phi (Lemma 4)
     phi = sdpvar(1, obj.n_t);
     for k = 1:obj.n_t
-        phi(k) = norm((obj.c_y - obj.d_y * obj.gcc.k) * x(:,k) + ...
-                       obj.d_y * v(:,k), 2);
+        phi(k) = norm((obj.c_y - obj.d_y_u * obj.gcc.k) * x(:,k) + ...
+                       obj.d_y_u * v(:,k), 2);
     end
     
     % Calculate phi_bar (Theorem 3)
@@ -132,4 +126,10 @@ function cap_phi = calculate_cap_phi(obj, x, v)
     for i = 1:obj.n_c
         cap_phi(i, :) = phi_bar * factor(:, :, i)';
     end
+end
+
+function x = rho(obj, i)
+%RHO Helper function to calculate terms of c matrix (Lemma 4)
+    
+    x = norm((obj.c_y - obj.d_y_u * obj.gcc.k) * (obj.np.a_cl ^ i) * obj.b_w, 2);
 end
