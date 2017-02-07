@@ -30,7 +30,9 @@ R = eye(2);
 %% Constraint definitions
 Ak = [1 0 0; -1 0 0; 0 1 0; 0 -1 0; 0 0 1; 0 0 -1];
 Bk = zeros(6,2);
-ck = - ones(6,1);
+Ck = zeros(6,1);
+dk = - ones(6,1);
+is_soft = true;
 
 %% Initialize class
 gcmpc = GCMPC;
@@ -38,7 +40,7 @@ gcmpc.set_system(F, G, Gr);
 gcmpc.set_disturbance(H, E1, E2, E3);
 gcmpc.set_reference_performance(D1, D2, gamma);
 gcmpc.set_cost(Q, R);
-gcmpc.set_constraint(Ak, Bk, ck);
+gcmpc.set_constraint(Ak, Bk, dk, Ck, is_soft);
 
 %% Generate linear controller
 T = 10;

@@ -80,9 +80,24 @@ function controller = generate(obj, n_t)
     
     % Add robust inequalities to optimization
     h_tilda = obj.h_x - obj.h_u * obj.gcc.k;
-    for k = 1:obj.n_t
-        constraint = [constraint;
-                      h_tilda * x(:,k) + obj.h_u * v(:,k) + obj.g + cap_phi(:,k) <= 0];
+    
+    if ~obj.is_constraint_soft  % Hard constraints
+        for k = 1:obj.n_t
+            constraint = [constraint;
+                          h_tilda * x(:,k) + obj.h_u * v(:,k) + obj.g + cap_phi(:,k) <= 0];
+        end
+    else                        % Soft constraints
+        slack = sdpvar(obj.n_c, obj.n_t);
+        
+        % Objective
+        objective = objective + obj.kSlackWeight * sum(sum(slack));
+        
+        % Constraint slacking
+        for k = 1:obj.n_t
+            constraint = [constraint;
+                          h_tilda * x(:,k) + obj.h_u * v(:,k) + obj.g + cap_phi(:,k) <= slack(:,k)];
+        end
+        constraint = [constraint; slack >= 0];
     end
     
     % Create YALMIP object
