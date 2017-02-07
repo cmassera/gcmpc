@@ -28,6 +28,10 @@ function obj = set_constraint(obj, h_x, h_u, g, h_r, is_soft)
         h_r = zeros(size(h_x, 1), obj.n_r);
     end
     
+    if nargin <= 5
+        is_soft = false;
+    end
+    
     % Get constraint size
     n_c = size(h_x, 1);
     

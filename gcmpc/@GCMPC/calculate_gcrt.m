@@ -33,7 +33,11 @@ function obj = calculate_gcrt(obj)
     k_p_inv = sdpvar(obj.n_u, obj.n_x, 'full');  % K P^(-1)
     l_e_r = sdpvar(obj.n_u, obj.n_r, 'full');    % L e_r
     s = sdpvar(obj.n_x, obj.n_x);                % S >= P
-    e_w = sdpvar();                              % Uncertainty S-Procedure variable
+    if ~obj.options.use_rlqr
+        e_w = sdpvar();                          % Uncertainty S-Procedure variable
+    else
+        e = 0;  % RLQR is equivalent to e = 0
+    end
     e_r = sdpvar();                              % Reference S-Procedure variable
     
     % Define GCC robustness requirement LMI
