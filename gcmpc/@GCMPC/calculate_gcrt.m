@@ -61,7 +61,7 @@ function obj = calculate_gcrt(obj)
     constraints = [gcrt_lmi <= 0; 
                    cost_lmi <= 0];
     objective = trace(s);
-    options = sdpsettings('solver', obj.options.solver_sdp, 'verbose', 1);
+    options = sdpsettings('solver', obj.options.solver_sdp, 'verbose', 0);
     
     % Solve optimization problem
     solve_out = optimize(constraints, objective, options);

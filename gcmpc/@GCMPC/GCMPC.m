@@ -66,6 +66,7 @@ classdef GCMPC < handle
         is_disturbance_set           = false;
         is_cost_set                  = false;
         is_constraint_set            = false;
+        is_constraint_soft           = false;
         is_gcc_set                   = false;
         is_nilpotent_set             = false;
         
@@ -73,6 +74,7 @@ classdef GCMPC < handle
         kPosDefTest = 1e-8;    % Minimum eigenvalue to consider matrix Positive-Definite
         kSymTest = 1e-8;       % Maximum difference to transpose for symmetric 
         kZeroTest = 1e-8;      % Maximum absolute value to be considered zero
+        kSlackWeight = 1e4;    % Slack weight for soft constraints
         kSdpSolver = 'mosek';  % Default SDP solver
         kQpSolver = 'mosek';   % Default (QC)QP solver
     end

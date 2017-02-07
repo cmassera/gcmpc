@@ -1,12 +1,13 @@
-function obj = set_constraint(obj, h_x, h_u, g, h_r)
+function obj = set_constraint(obj, h_x, h_u, g, h_r, is_soft)
 %SET_CONSTRAINTS Set constraint matrices Hx, Hu and g
 %
 %    Input(s):
-%    (1) obj - GCMPC class instance
-%    (2) h_x - Constraint state matrix
-%    (3) h_y - Constraint control input matrix
-%    (4) g   - Constraint affine term
-%    (5) h_r - Constraint reference input matrix (optional)
+%    (1) obj     - GCMPC class instance
+%    (2) h_x     - Constraint state matrix
+%    (3) h_y     - Constraint control input matrix
+%    (4) g       - Constraint affine term
+%    (5) h_r     - Constraint reference input matrix (optional)
+%    (5) is_soft - Should constraints be soft? (optional, defaults to false)
 %
 %    Author(s):
 %    (1) Carlos M. Massera
@@ -64,6 +65,7 @@ function obj = set_constraint(obj, h_x, h_u, g, h_r)
     obj.h_u = h_u;
     obj.g = g;
     obj.n_c = n_c;
+    obj.is_constraint_soft = is_soft;
     obj.is_constraint_set = true;
 end
 
