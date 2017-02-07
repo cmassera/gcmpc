@@ -30,7 +30,11 @@ function controller = generate(obj, n_t)
     
     % Generate GCC and Nil-potent controllers if they are not generated
     if ~obj.is_gcc_set
-        obj.calculate_gcc();
+        if ~obj.is_reference_set  % No reference, use GCC
+            obj.calculate_gcc();
+        else                      % Reference, use GCRT
+            obj.calculate_gcrt();
+        end
     end
     
     if ~obj.is_nilpotent_set
@@ -45,6 +49,11 @@ function controller = generate(obj, n_t)
     v = sdpvar(obj.n_u, obj.n_t);
     u = - obj.gcc.k * x(:, 1:obj.n_t) + v;
     
+    if obj.is_reference_set  % Define reference inputs, update u to have feedforward term
+        r = sdpvar(obj.n_r, obj.n_t);
+        u = u - obj.gcc.l * r;
+    end
+    
     % Define problem objective
     p = obj.gcc.p;
     r_bar = obj.gcc.r_bar;
@@ -55,7 +64,12 @@ function controller = generate(obj, n_t)
     obj.opt.objective = objective;
     
     % Define system dynamics constraints
-    constraint = (x(:,2:end) == (obj.a - obj.b_u * obj.gcc.k) * x(:,1:end-1) + obj.b_u * v);
+    if ~obj.is_reference_set  % No reference
+        constraint = (x(:,2:end) == (obj.a - obj.b_u * obj.gcc.k) * x(:,1:end-1) + obj.b_u * v);
+    else                      % With reference
+        constraint = (x(:,2:end) == (obj.a - obj.b_u * obj.gcc.k) * x(:,1:end-1) + ...
+                                    obj.b_u * v + (obj.b_r - obj.b_u * obj.gcc.l) * r);
+    end
     
     % Generate robust constraint set
     cap_phi = calculate_cap_phi(obj, x, v);
@@ -67,27 +81,35 @@ function controller = generate(obj, n_t)
                       h_tilda * x(:,k) + obj.h_u * v(:,k) + obj.g + cap_phi(:,k) <= 0];
     end
     
+    % Simple warning
+    if obj.is_reference_set && any(any(obj.h_r ~= 0))
+        warning('Robustification process do not handle non zero Hr currently');
+        % TODO: Make it handle!
+    end
+    
     % Create YALMIP object
     ops = sdpsettings('solver', obj.options.solver_qp, 'verbose', 0);
-    controller = optimizer(constraint, objective, ops, x(:,1), u(:,1));
     
+    if ~obj.is_reference_set  % No reference as input
+        controller = optimizer(constraint, objective, ops, x(:,1), u(:,1));
+    else
+        controller = optimizer(constraint, objective, ops, {x(:,1), r}, u(:,1));
+    end
+
     % Save everything else
     obj.opt.objective = objective;
     obj.opt.constraint = constraint;
     obj.opt.variable.x = x;
     obj.opt.variable.u = u;
     obj.opt.variable.v = v;
+    if obj.is_reference_set
+        obj.opt.variable.r = r;
+    end
     obj.opt.controller = controller;
 end
 
-function x = rho(obj, i)
-%RHO helper function to calculate terms of c matrix
-    
-    x = norm((obj.c_y - obj.d_y * obj.gcc.k) * (obj.np.a_cl ^ i) * obj.b_w, 2);
-end
-
 function cap_phi = calculate_cap_phi(obj, x, v)
-%CALCULATE_CAP_PHI helper function to calculate capital Phi based on Lemma 4 and Theorem 3
+%CALCULATE_CAP_PHI Helper function to calculate capital Phi based on Lemma 4 and Theorem 3
     
     % First calculate the coeficient matrix c (Lemma 4)
     c = eye(obj.n_t);
@@ -104,8 +126,8 @@ function cap_phi = calculate_cap_phi(obj, x, v)
     % Calculate phi (Lemma 4)
     phi = sdpvar(1, obj.n_t);
     for k = 1:obj.n_t
-        phi(k) = norm((obj.c_y - obj.d_y * obj.gcc.k) * x(:,k) + ...
-                       obj.d_y * v(:,k), 2);
+        phi(k) = norm((obj.c_y - obj.d_y_u * obj.gcc.k) * x(:,k) + ...
+                       obj.d_y_u * v(:,k), 2);
     end
     
     % Calculate phi_bar (Theorem 3)
@@ -132,4 +154,10 @@ function cap_phi = calculate_cap_phi(obj, x, v)
     for i = 1:obj.n_c
         cap_phi(i, :) = phi_bar * factor(:, :, i)';
     end
+end
+
+function x = rho(obj, i)
+%RHO Helper function to calculate terms of c matrix (Lemma 4)
+    
+    x = norm((obj.c_y - obj.d_y_u * obj.gcc.k) * (obj.np.a_cl ^ i) * obj.b_w, 2);
 end

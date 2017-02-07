@@ -20,6 +20,10 @@ function obj = calculate_gcc(obj)
         error('Cost matrices not set, define them before the generating GCC')
     end
     
+    if obj.is_reference_set
+        error('This system has a reference input, use GCRT instead of GCC')
+    end
+    
     % Define LMI variables
     p_inv = sdpvar(obj.n_x, obj.n_x);            % P^(-1)
     k_p_inv = sdpvar(obj.n_u, obj.n_x, 'full');  % K P^(-1)
@@ -29,9 +33,9 @@ function obj = calculate_gcc(obj)
     % Define GCC robustness requirement LMI
     gcc_lmi = blkvar;
     gcc_lmi(1,1) = - eye(obj.n_z);
-    gcc_lmi(1,4) = obj.c_z * p_inv - obj.d_z * k_p_inv;
+    gcc_lmi(1,4) = obj.c_z * p_inv - obj.d_z_u * k_p_inv;
     gcc_lmi(2,2) = - e * eye(obj.n_y);
-    gcc_lmi(2,4) = obj.c_y * p_inv - obj.d_y * k_p_inv;
+    gcc_lmi(2,4) = obj.c_y * p_inv - obj.d_y_u * k_p_inv;
     gcc_lmi(3,3) = - p_inv + e * (obj.b_w * obj.b_w');
     gcc_lmi(3,4) = obj.a * p_inv - obj.b_u * k_p_inv;
     gcc_lmi(4,4) = - p_inv;
@@ -65,8 +69,8 @@ function obj = calculate_gcc(obj)
     % Suboptimal gains, needed to get r_bar
     obj.gcc.x = inv(value(p_inv) - e * (obj.b_w * obj.b_w'));
     % For a controller u = - K x + v, the new cost matrix is v' * r_bar * v
-    obj.gcc.r_bar = (obj.d_z' * obj.d_z) + ...
-                    e^(-1) * (obj.d_y' * obj.d_y) + ...
+    obj.gcc.r_bar = (obj.d_z_u' * obj.d_z_u) + ...
+                    e^(-1) * (obj.d_y_u' * obj.d_y_u) + ...
                     obj.b_u' * obj.gcc.x * obj.b_u;
     % Set calculation flag
     obj.is_gcc_set = true;
