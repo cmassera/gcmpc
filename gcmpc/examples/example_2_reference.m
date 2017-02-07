@@ -52,13 +52,15 @@ if ~exist('Delta')
 end
 U = NaN * ones(N, size(G,2));
 
-controller{zeros(size(F,2), 1)};
+r = 0.1 * ones(1, 10);
+
+controller(zeros(size(F,2), 1), r);
 
 X(1,:) = [1;1;1];
 
 for i = 1:N
     tic
-    U(i,:) = controller{X(i,:)'}';
+    U(i,:) = controller(X(i,:)', r)';
     toc
     
     delta = reshape(Delta(1, :, :), [size(H,2), size(H,2)]);
