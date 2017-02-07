@@ -41,6 +41,7 @@ classdef GCMPC < handle
         n_x = 0;  % Number of states
         n_u = 0;  % Number of control inputs
         n_r = 0;  % Number of reference inputs
+        n_p = 0;  % Number of referemce performance inputs
         n_w = 0;  % Number of disturbance inputs
         n_y = 0;  % Number of disturbance outputs
         n_z = 0;  % Number of cost outputs (positive eigenvalues of [Q N; N' R])
@@ -59,13 +60,14 @@ classdef GCMPC < handle
                      'controller', 0);
         
         % Boolean flags to check if all requirements have been met
-        is_system_set      = false;
-        is_reference_set   = false;
-        is_disturbance_set = false;
-        is_cost_set        = false;
-        is_constraint_set  = false;
-        is_gcc_set         = false;
-        is_nilpotent_set   = false;
+        is_system_set                = false;
+        is_reference_set             = false;
+        is_reference_performance_set = false;
+        is_disturbance_set           = false;
+        is_cost_set                  = false;
+        is_constraint_set            = false;
+        is_gcc_set                   = false;
+        is_nilpotent_set             = false;
         
         % Constants
         kPosDefTest = 1e-8;    % Minimum eigenvalue to consider matrix Positive-Definite

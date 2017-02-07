@@ -20,6 +20,10 @@ function obj = calculate_gcc(obj)
         error('Cost matrices not set, define them before the generating GCC')
     end
     
+    if obj.is_reference_set
+        error('This system has a reference input, use GCRT instead of GCC')
+    end
+    
     % Define LMI variables
     p_inv = sdpvar(obj.n_x, obj.n_x);            % P^(-1)
     k_p_inv = sdpvar(obj.n_u, obj.n_x, 'full');  % K P^(-1)
