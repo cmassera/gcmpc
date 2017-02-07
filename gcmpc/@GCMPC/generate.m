@@ -85,12 +85,6 @@ function controller = generate(obj, n_t)
                       h_tilda * x(:,k) + obj.h_u * v(:,k) + obj.g + cap_phi(:,k) <= 0];
     end
     
-    % Simple warning
-    if obj.is_reference_set && any(any(obj.h_r ~= 0))
-        warning('Robustification process do not handle non zero Hr currently');
-        % TODO: Make it handle!
-    end
-    
     % Create YALMIP object
     ops = sdpsettings('solver', obj.options.solver_qp, 'verbose', 0);
     
