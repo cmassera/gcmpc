@@ -26,7 +26,7 @@ function obj = set_reference_performance(obj, c_p, d_p_u, gamma)
         error('Cp matrix size does not match A matrix');
     end
     
-    if size(d_p_u, 1) ~= n_y
+    if size(d_p_u, 1) ~= n_p
         error('Dpu matrix size does not match Cy matrix');
     end
     
