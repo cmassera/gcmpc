@@ -81,7 +81,9 @@ classdef GCMPC < handle
     
     properties(SetAccess=public, GetAccess=public)
         % Options structure
-        options = struct();
+        options = struct('solver_sdp', '', ...
+                         'solver_qp', '', ...
+                         'use_rlqr', false);
     end
     
     methods

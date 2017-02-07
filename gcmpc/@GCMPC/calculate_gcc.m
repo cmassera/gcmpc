@@ -28,7 +28,11 @@ function obj = calculate_gcc(obj)
     p_inv = sdpvar(obj.n_x, obj.n_x);            % P^(-1)
     k_p_inv = sdpvar(obj.n_u, obj.n_x, 'full');  % K P^(-1)
     s = sdpvar(obj.n_x, obj.n_x);                % S >= P
-    e = sdpvar();                                % GCC S-Procedure variable
+    if ~obj.options.use_rlqr
+        e = sdpvar();                            % GCC S-Procedure variable
+    else
+        e = 0;  % RLQR is equivalent to e = 0
+    end
     
     % Define GCC robustness requirement LMI
     gcc_lmi = blkvar;
