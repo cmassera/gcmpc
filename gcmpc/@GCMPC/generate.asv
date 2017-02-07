@@ -72,17 +72,19 @@ function controller = generate(obj, n_t)
     end
     
     % Generate robust constraint set
-    if ~obj.is_reference_set  % No reference
-        cap_phi = calculate_cap_phi(obj, x, v);
-    else                      % With reference
-        cap_phi = calculate_cap_phi(obj, x, v, r);
-    end
+    cap_phi = calculate_cap_phi(obj, x, v);
     
     % Add robust inequalities to optimization
     h_tilda = obj.h_x - obj.h_u * obj.gcc.k;
     for k = 1:obj.n_t
         constraint = [constraint;
                       h_tilda * x(:,k) + obj.h_u * v(:,k) + obj.g + cap_phi(:,k) <= 0];
+    end
+    
+    % Simple warning
+    if obj.is_reference_set && any(any(obj.h_r ~= 0))
+        warning('Robustification process do not handle non zero Hr currently');
+        % TODO: Make it handle!
     end
     
     % Create YALMIP object
@@ -126,16 +128,16 @@ function cap_phi = calculate_cap_phi(obj, x, v, r)
     % Calculate phi (Lemma 4)
     phi = sdpvar(1, obj.n_t);
     
-    if ~obj.is_reference_set  % Without reference terms
+    if obj.is_reference_set
         for k = 1:obj.n_t
             phi(k) = norm((obj.c_y - obj.d_y_u * obj.gcc.k) * x(:,k) + ...
                            obj.d_y_u * v(:,k), 2);
         end
-    else                      % With reference terms
+    else
         for k = 1:obj.n_t
             phi(k) = norm((obj.c_y - obj.d_y_u * obj.gcc.k) * x(:,k) + ...
                            obj.d_y_u * v(:,k) + ...
-                          (obj.d_y_r - obj.d_y_u * obj.gcc.l) * r(:,k), 2);
+                          , 2);
         end
     end
     

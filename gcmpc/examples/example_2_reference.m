@@ -52,7 +52,7 @@ if ~exist('Delta')
 end
 U = NaN * ones(N, size(G,2));
 
-r = 0.1 * ones(1, 10);
+r = 0.2 * ones(1, 10);
 
 controller(zeros(size(F,2), 1), r);
 
