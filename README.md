@@ -5,9 +5,6 @@ This repository implements the Guaranteed Cost Model Predictive Controller (GCMP
 It contains:
 - GCMPC Matlab implementation;
 - The source code for the numerical examples of the paper;
-- Complimentary material with: 
-  - Proof of Lemma 3;
-  - Discussion on the independence of controllers in Corollary 1.
 
 ## Pre-requisites
 
@@ -34,16 +31,7 @@ Note: Mosek has free-licenses for Academia.
  5. Edit/create startup.m in your Matlab startup folder and add `tbxmanager restorepath` there
  6. Install Mosek through the steps in their website/installer
  7. Add mosek to Matlab's path
-
-## Running the examples
-
-All examples are self contained and can be directly run. For example:
-
-```matlab
->> gcmpc_l2norm
->> rmpc_enum
->> plot_results
-```
+ 8. Add gcmpc folder to Matlab's path
 
 ## Citing
 
