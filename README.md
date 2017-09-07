@@ -6,38 +6,15 @@ It contains:
 - GCMPC Matlab implementation;
 - The source code for the numerical examples of the paper;
 
-## Pre-requisites
-
-The source code in this repository requires:
-
-- [MATLAB](http://www.mathworks.com/products/matlab/)
-
-and
-
-- [MATLAB Symbolic Toolbox](https://www.mathworks.com/products/symbolic.html)
-- [YALMIP Toolbox](http://users.isy.liu.se/johanl/yalmip/)
-- [Mosek](https://www.mosek.com)
-
-Installed and referenced in MATLAB's path.
-
-Note: Mosek has free-licenses for Academia.
-
-### Installing pre-requisites
-
- 1. Create a folder named **tbxmanager**
- 2. Go to this folder in Matlab
- 3. Execute `urlwrite('http://www.tbxmanager.com/tbxmanager.m', 'tbxmanager.m');`
- 4. Execute `tbxmanager install yalmip`
- 5. Edit/create startup.m in your Matlab startup folder and add `tbxmanager restorepath` there
- 6. Install Mosek through the steps in their website/installer
- 7. Add mosek to Matlab's path
- 8. Add gcmpc folder to Matlab's path
+### This Repository has moved, to access it go to: [https://gitlab.com/cmasseraf/gcmpc](https://gitlab.com/cmasseraf/gcmpc)
 
 ## Citing
 
-@article{massera2016guaranteed,
-title={A Guaranteed Cost Approach to Robust Model Predictive Control of Uncertain Linear Systems},
-author={Massera, Carlos M and Terra, Marco H and Wolf, Denis F},
-journal={arXiv preprint arXiv:1606.03437},
-year={2016}
-}
+@inproceedings{massera2016guaranteed, 
+author={C. M. Massera and M. H. Terra and D. F. Wolf}, 
+booktitle={2017 American Control Conference (ACC)}, 
+title={Guaranteed cost approach for robust model predictive control of uncertain linear systems}, 
+year={2017}, 
+pages={4135-4140}, 
+doi={10.23919/ACC.2017.7963590}, 
+month={May},}
